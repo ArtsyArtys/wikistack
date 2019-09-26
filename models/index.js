@@ -8,11 +8,17 @@ const Page = db.define('page', {
     type: Sequelize.STRING,
     allowNull: false
   },
-  slug: Sequelize.STRING,
-  content: Sequelize.TEXT,
-  status: {
-    type: Sequelize.BOOLEAN,
+  slug: {
+    type: Sequelize.STRING,
     allowNull: false
+  },
+  content: {
+    type: Sequelize.TEXT,
+    allowNull: false
+  },
+  status: {
+    type: Sequelize.ENUM("open", "closed"),
+    defaultValue: "closed",
   }
 });
 
@@ -23,7 +29,10 @@ const User = db.define('user', {
   },
   email: {
     type: Sequelize.STRING,
-    allowNull: false
+    allowNull: false,
+    validate: {
+      isEmail: true
+    }
   }
 });
 
