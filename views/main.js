@@ -13,8 +13,8 @@ module.exports = (pages) => layout(html`
     <ul>
     ${pages.map(page=>{
       return `<li><a href="/wiki/${page.slug}">${page.title}</a></li>`;
-    })//.reduce((acc, curr)=>{return (acc+curr)}, ``)
+    })//.reduce((acc, curr)=>{return (acc+curr)}, ``) html parses the array as ajoined string
   }
-     
+
     </ul>
   </ul>`);

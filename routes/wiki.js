@@ -13,16 +13,19 @@ router.post('/', async (req, res, next)=>{
     const title=req.body.title;
     const content=req.body.content;
     const slug=title.replace(/[^a-zA-Z0-9]/g, '_');
-    await sequelize.Page.create({
+    const [user, wasCreated] = await sequelize.User.findOrCreate({
+      where: {
         name,
-        email,
+        email
+      }
+    });
+    const page = await sequelize.Page.create({
         title,
         content,
         slug
     });
+    page.setAuthor(user);
     res.redirect(`/wiki/${slug}`);
-    //console.log('name, email, title, content:', name, email, title, content);
-    //res.send('');
 })
 
 router.get('/add', (req, res, next)=>{
@@ -30,7 +33,7 @@ router.get('/add', (req, res, next)=>{
 })
 
 router.get('/:pid', async (req, res, next)=>{
-    const page=sequelize.Page.findOne(
+    const page = await sequelize.Page.findOne(
         {where: {slug: req.params.pid}});
-    res.send(wikipage(await page));
+    res.send(wikipage(page, await page.getAuthor()));
 });

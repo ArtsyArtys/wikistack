@@ -1,13 +1,21 @@
 const router=require('express').Router();
 const sequelize=require('../models/index');
+const userList = require('../views/userList');
+const userPages = require('../views/userPages');
+
 router.get('/', async (req, res, next)=>{
     const toSend=await sequelize.User.findAll();
-    res.send(toSend);
+    res.send(userList(toSend));
 })
 router.get('/:uid', async (req, res, next)=>{
     try{
-    const toSend=await sequelize.User.findByPk(req.params.uid);
-    res.send(toSend);
+    const user = sequelize.User.findByPk(req.params.uid);
+    const thisUsersPages = sequelize.Page.findAll({
+      where: {
+        authorId: req.params.uid
+      }
+    });
+    res.send(userPages(await user, await thisUsersPages));
     }catch(err){
         res.status(500);
         res.send('Error');
@@ -23,13 +31,13 @@ router.put('/:uid', async (req, res, next)=>{
     sequelize.User.findByPk(req.params.uid).then(update(
         {
          name: req.body.name,
-         email: req.body.email   
+         email: req.body.email
         }
     ).then(()=>{}));
 
 })
 router.delete('/:uid', async(req, res, next)=>{
     sequelize.User.findByPk(req.params.uid).then(user=>user.destroy()).then(res.redirect('/'));
-    
+
 });
 module.exports=router;
