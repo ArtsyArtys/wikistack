@@ -5,7 +5,7 @@ const wikipage=require('../views/wikipage');
 module.exports=router;
 
 router.get('/', (req, res, next)=>{
-    res.send('text');
+    res.redirect('../');
 })
 router.post('/', async (req, res, next)=>{
     const name=req.body.name;
@@ -36,4 +36,13 @@ router.get('/:pid', async (req, res, next)=>{
     const page = await sequelize.Page.findOne(
         {where: {slug: req.params.pid}});
     res.send(wikipage(page, await page.getAuthor()));
+});
+
+router.delete('/:pid', async (req, res) => {
+  const page = await sequelize.Page.findOne({
+    where: {
+      slug: req.params.pid
+    }})//.then(page => page.destroy());
+    page.destroy();
+    res.redirect('/');
 });

@@ -27,7 +27,7 @@ app.get('/', async (req, res, next) => {
   res.send(layout(main(pages)));
 });
 
-(async () => { await db.sync({force: true}); })();
-// (async () => { await db.sync(); })();
+// (async () => { await db.sync({force: true}); })();
+(async () => { await db.sync(); })();
 
 app.listen(1337);

@@ -36,6 +36,8 @@ const User = db.define('user', {
   }
 });
 
+console.log(User);
+
 Page.belongsTo(User, { as: 'author' });
 User.hasMany(Page);
 
